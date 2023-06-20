@@ -30,13 +30,15 @@ export namespace Loader {
      * @returns An array of the loaded modules' return values
      */
     export function Load<T extends defined = defined>(Folder: Folder): T[] {
-        const LoadedModules = [ ]
+        const LoadedModules: T[] = [ ]
 
         for (const Child of Folder.GetChildren()) {
             if(Child.IsA("ModuleScript")) {
                 LoadedModules.push(require(Child) as T)
             } else if(Child.IsA("Folder")) {
-                LoadedModules.push(...Load(Child) as T[])
+                Load(Child).forEach((ModuleValue) => {
+                    LoadedModules.push(ModuleValue as T)
+                })
             }
         }
 
