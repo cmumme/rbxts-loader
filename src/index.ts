@@ -36,7 +36,7 @@ export namespace Loader {
             if(Child.IsA("ModuleScript")) {
                 LoadedModules.push(require(Child) as T)
             } else if(Child.IsA("Folder")) {
-                (LoadedModules.push as UnknownFunction)(...Load(Child) as T[])
+                LoadedModules.push(...Load(Child) as T[])
             }
         }
 
