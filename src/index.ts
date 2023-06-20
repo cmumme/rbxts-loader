@@ -36,7 +36,8 @@ export namespace Loader {
             if(Child.IsA("ModuleScript")) {
                 LoadedModules.push(require(Child) as T)
             } else if(Child.IsA("Folder")) {
-                (LoadedModules.push as UnknownFunction)(...Loader.Load(Child) as T[])
+                // could somebody tell me why the spread operator produces unpack() and table.unpack() is not typed in rbxts??
+                (LoadedModules.push as UnknownFunction)((table as unknown as { unpack: UnknownFunction }).unpack(Loader.Load(Child) as T[]))
             }
         }
 
