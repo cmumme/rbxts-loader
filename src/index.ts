@@ -6,8 +6,8 @@ type ModuleConstructor<T extends ModuleValue = { }> = { new(...Args: never[]): T
 
 const ActiveModules: Map<ModuleConstructor, ModuleValue> = new Map()
 
-function HasStartMethod(Module: unknown): Module is Pick<Required<ModuleValue>, "Start"> {
-    return true
+function HasStartMethod(Module: object): Module is Pick<Required<ModuleValue>, "Start"> {
+    return "Start" in Module && typeIs(Module.Start, "function")
 }
 
 export namespace Loader {
