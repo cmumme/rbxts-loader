@@ -1,11 +1,14 @@
-type UnknownFunction = (...args: unknown[])=>unknown
-interface ModuleValue {
-    Start?: (this: ModuleValue)=>void
+type ModuleValue = {
+    Start?: (this: ModuleValue) => void;
 }
 
-type ModuleConstructor<T extends ModuleValue = ModuleValue> = { new(...Args: never[]): T }
+type ModuleConstructor<T extends ModuleValue = { }> = { new(...Args: never[]): T }
 
 const ActiveModules: Map<ModuleConstructor, ModuleValue> = new Map()
+
+function HasStartMethod(Module: unknown): Module is Pick<Required<ModuleValue>, "Start"> {
+    return true
+}
 
 export namespace Loader {
     /**
@@ -69,6 +72,8 @@ export namespace Loader {
 
         ActiveModules.set(Target, Module)
 
-        Module.Start && Module.Start()
+        HasStartMethod(Module) && task.defer(() => {
+            Module.Start()
+        })
     }
 }
